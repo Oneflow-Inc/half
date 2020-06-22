@@ -1319,12 +1319,12 @@ namespace half_float
 			unsigned int abs = value & 0x7FFF;
 			if(abs >= 0x7C00)
 			{
-				raise(FE_INVALID);
+				detail::raise(FE_INVALID);
 				return (value&0x8000) ? std::numeric_limits<T>::min() : std::numeric_limits<T>::max();
 			}
 			if(abs < 0x3800)
 			{
-				raise(FE_INEXACT, I);
+				detail::raise(FE_INEXACT, I);
 				return	(R==std::round_toward_infinity) ? T(~(value>>15)&(abs!=0)) :
 						(R==std::round_toward_neg_infinity) ? -T(value>0x8000) :
 						T();
@@ -1337,9 +1337,9 @@ namespace half_float
 				(R==std::round_toward_neg_infinity) ? (((1<<exp)-1)&-(value>>15)) : 0))>>exp));
 			if((!std::numeric_limits<T>::is_signed && (value&0x8000)) || (std::numeric_limits<T>::digits<16 &&
 				((value&0x8000) ? (-i<std::numeric_limits<T>::min()) : (i>std::numeric_limits<T>::max()))))
-				raise(FE_INVALID);
+				detail::raise(FE_INVALID);
 			else if(I && exp > 0 && (m&((1<<exp)-1)))
-				raise(FE_INEXACT);
+				detail::raise(FE_INEXACT);
 			return static_cast<T>((value&0x8000) ? -i : i);
 		}
 
